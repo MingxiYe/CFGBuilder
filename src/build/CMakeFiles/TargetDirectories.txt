@@ -1,3 +1,0 @@
-/home/inplus/mingxiye/Targeted_CFG/src/build/CMakeFiles/rebuild_cache.dir
-/home/inplus/mingxiye/Targeted_CFG/src/build/CMakeFiles/edit_cache.dir
-/home/inplus/mingxiye/Targeted_CFG/src/build/CMakeFiles/main.dir
