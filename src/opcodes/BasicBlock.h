@@ -9,127 +9,138 @@
 using namespace std;
 
 class BasicBlock : public Bytecode{
-    private:
-        vector<BasicBlock*> predecessors;
-        vector<BasicBlock*> successors;
-        int stackBalance;
-        BasicBlockType type;
+private:
+    vector<BasicBlock*> predecessors;
+    vector<BasicBlock*> successors;
+    int stackBalance;
+    BasicBlockType type;
 
-        bool isVulnerable = false;
+    bool isVulnerable = false;
 
-        int calculateStackBalance() const{
-            int balance = 0;
-            for(Opcode* o : this->getOpcodes()){
-                balance -= o->getStackConsumed();
-                balance += o->getStackGenerated();
-            }
-            return balance;
+    int calculateStackBalance() const{
+        int balance = 0;
+        for(Opcode* o : this->getOpcodes()){
+            balance -= o->getStackConsumed();
+            balance += o->getStackGenerated();
         }
+        return balance;
+    }
 
-    public:
-        BasicBlock(){
-            offset = 0;
-            length = 0;
-        }
+public:
+    BasicBlock(){
+        offset = 0;
+        length = 0;
+    }
 
-        BasicBlock(long offset){
-            this->offset = offset;
-            length = 0;
-        }
+    BasicBlock(long offset){
+        this->offset = offset;
+        length = 0;
+    }
 
-        /**
-         * Default constructor with offset and opcodes
-         * @param offset position in the code
-         * @param opcodes list of opcodes
-         */
-        BasicBlock(long offset, vector<Opcode*> &opcodes) : Bytecode(offset, opcodes){
-            this->type = BasicBlockType::COMMON;
-        }
+    /**
+     * Default constructor with offset and opcodes
+     * @param offset position in the code
+     * @param opcodes list of opcodes
+     */
+    BasicBlock(long offset, vector<Opcode*> &opcodes) : Bytecode(offset, opcodes){
+        this->type = BasicBlockType::COMMON;
+    }
 
-        /**
-         * Default getter for the successors of the block
-         * @return successors blocks
-         */
-        vector<BasicBlock*> getSuccessors() const{
-            return successors;
-        }
+    /**
+     * Default getter for the successors of the block
+     * @return successors blocks
+     */
+    vector<BasicBlock*> getSuccessors() const{
+        return successors;
+    }
 
-        /**
-         * Default getter for the predecessors of the block
-         * @return predecessors blocks
-         */
-        vector<BasicBlock*> getPredecessors() const{
-            return predecessors;
-        }
+    /**
+     * Default getter for the predecessors of the block
+     * @return predecessors blocks
+     */
+    vector<BasicBlock*> getPredecessors() const{
+        return predecessors;
+    }
 
-        /**
-         * Default getter for the stack balance. It represents the number of elements added/removed to the stack if the entire block is executed
-         * @return the stack balance
-         */
-        int getStackBalance() const{
-            return stackBalance;
-        }
+    /**
+     * Default getter for the stack balance. It represents the number of elements added/removed to the stack if the entire block is executed
+     * @return the stack balance
+     */
+    int getStackBalance() const{
+        return stackBalance;
+    }
 
-        /**
-         * Adds a successor to the block. The block is also added to the successor block as a predecessor
-         * @param next the next block
-         */
-        void addSuccessor(BasicBlock* next){
-            this->successors.push_back(next);
-            next->predecessors.push_back(this);
-        }
+    /**
+     * Adds a successor to the block. The block is also added to the successor block as a predecessor
+     * @param next the next block
+     */
+    void addSuccessor(BasicBlock* next){
+        this->successors.push_back(next);
+        next->predecessors.push_back(this);
+    }
 
-        /**
-         * Adds the opcode and updates the stack balance
-         * @param opcode the opcode to add
-         */
-        void addOpcode(Opcode* opcode){
-            Bytecode::addOpcode(opcode);
-            this->stackBalance -= opcode->getStackConsumed();
-            this->stackBalance += opcode->getStackGenerated();
-        }
+    /**
+     * Adds the opcode and updates the stack balance
+     * @param opcode the opcode to add
+     */
+    void addOpcode(Opcode* opcode){
+        Bytecode::addOpcode(opcode);
+        this->stackBalance -= opcode->getStackConsumed();
+        this->stackBalance += opcode->getStackGenerated();
+    }
 
-        /**
-         * Adds the opcodes and updates the stack balance
-         * @param opcodes opcodes to be added
-         */
-        void addAll(vector<Opcode*> &opcodes){
-            Bytecode::addAll(opcodes);
-            this->stackBalance = calculateStackBalance();
-        }
+    /**
+     * Adds the opcodes and updates the stack balance
+     * @param opcodes opcodes to be added
+     */
+    void addAll(vector<Opcode*> &opcodes){
+        Bytecode::addAll(opcodes);
+        this->stackBalance = calculateStackBalance();
+    }
 
-        /**
-         * Default setter for the type
-         * @param type block's type
-         */
-        void setType(BasicBlockType type){
-            this->type = type;
-        }
+    /**
+     * Default setter for the type
+     * @param type block's type
+     */
+    void setType(BasicBlockType type){
+        this->type = type;
+//            switch (type) {
+//                case 0:
+//                    this->type = BasicBlockType::COMMON;
+//                case 1:
+//                    this->type = BasicBlockType::DISPATCHER;
+//                case 2:
+//                    this->type = BasicBlockType::FALLBACK;
+//                case 3:
+//                    this->type = BasicBlockType::EXIT;
+//            }
+    }
 
-        /**
-         * Default getter for the type
-         * @return block's type
-         */
-        BasicBlockType getType() const{
-            return type;
-        }
+    /**
+     * Default getter for the type
+     * @return block's type
+     */
+    BasicBlockType getType() const{
+        return type;
+    }
 
-        /**
-         * Default representation of the block as bytecode. The special case is the exit block
-         * @return block's string representation
-         */
-        string toString() const{
-            if(type == EXIT)
-                return getOffset() + ": EXIT BLOCK";
-            else
-                return toString();
-        }
+    /**
+     * Default representation of the block as bytecode. The special case is the exit block
+     * @return block's string representation
+     */
+    string toString() const{
+        if(type == EXIT)
+            return getOffset() + ": EXIT BLOCK";
+        else
+            // 这里要继承父类的方法，相当于Java的super
+            return Bytecode::toString();
+    }
 
-        void setTarget(){
-            isVulnerable = true;
-        }
+    void setTarget(){
+        isVulnerable = true;
+    }
 
-        bool isTargeted(){
-            return isVulnerable;
-        }
+    bool isTargeted(){
+        return isVulnerable;
+    }
 };

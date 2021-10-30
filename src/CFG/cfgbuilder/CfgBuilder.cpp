@@ -13,27 +13,31 @@ bool CfgBuilder::REMOVE_ORPHAN_BLOCKS = true; // TODO experimental
 int CfgBuilder::BLOCK_LIMIT = 200000; // TODO experimental: if a contract is too big we run the symbolic execution at most on this number of blocks
 
 OpcodeID CfgBuilder::BASIC_BLOCK_DELIMITERS[7] = {
-    OpcodeID::JUMP,
-    OpcodeID::JUMPI,
-    OpcodeID::STOP,
-    OpcodeID::REVERT,
-    OpcodeID::RETURN,
-    OpcodeID::INVALID,
-    OpcodeID::SELFDESTRUCT
+        OpcodeID::JUMP,
+        OpcodeID::JUMPI,
+        OpcodeID::STOP,
+        OpcodeID::REVERT,
+        OpcodeID::RETURN,
+        OpcodeID::INVALID,
+        OpcodeID::SELFDESTRUCT
 };
 
 vector<string> CfgBuilder::divide(const string& in, const string& delim, const int share) {
     regex re{ delim };
     vector<string> result = {
-        sregex_token_iterator(in.begin(), in.end(), re, -1),
-        sregex_token_iterator()
+            sregex_token_iterator(in.begin(), in.end(), re, -1),
+            sregex_token_iterator()
     };
+//    cout<<result.size()<<endl;
+//    cout<<result[0]<<endl;
+//    cout<<result[1]<<endl;
     for(int i = share; i < result.size(); i++)
         result[share - 1] += result[i];
     while(result.size() > share)
         result.pop_back();
     return result;
 }
+
 
 BasicBlock* CfgBuilder::getByOffset(vector<BasicBlock*> &basicBlocks, long offset){
     BasicBlock* target = NULL;
@@ -107,7 +111,7 @@ void CfgBuilder::calculateSuccessors(vector<BasicBlock*> &basicBlocks, CfgBuilde
             }
         }
 
-        // JUMPI
+            // JUMPI
         else if(lastOpcode->getOpcodeID() == OpcodeID::JUMPI && opcodes.size() > 1){
             // Add the next one
             long nextOffset = lastOpcode->getOffset() + lastOpcode->getLength();
@@ -132,17 +136,17 @@ void CfgBuilder::calculateSuccessors(vector<BasicBlock*> &basicBlocks, CfgBuilde
             }
         }
 
-        // Other delimiters
+            // Other delimiters
         else if(isContainDelimiters(lastOpcode->getOpcodeID())){
             // there is a control flow break, no successor added
         }
 
-        // Exclude the last block which has no sequent
+            // Exclude the last block which has no sequent
         else if(i == basicBlocks.size() - 1){
             // skip
         }
 
-        // Else
+            // Else
         else{
             // It's a common operation, add the next
             BasicBlock* nextBasicBlock = basicBlocks[i + 1];
@@ -237,7 +241,7 @@ string CfgBuilder::removeRemainingData(vector<BasicBlock*> &basicBlocks, CfgBuil
     vector<long> offsetList;
     for(BasicBlock* basicBlock : basicBlocks)
         offsetList.push_back(basicBlock->getOffset());
-    
+
     for(long offset : offsetList){
         if(getByOffset(basicBlocks, offset)->getPredecessors().size() == 0 && getByOffset(basicBlocks, offset)->getBytes() == "fe")
             firstInvalidBlock = offset;
@@ -293,9 +297,9 @@ void CfgBuilder::detectDispatcher(vector<BasicBlock*> &basicBlocks){
     for(BasicBlock* bb : basicBlocks){
         if( (bb->getLastOpcode()->getOpcodeID() == OpcodeID::RETURN || bb->getLastOpcode()->getOpcodeID() == OpcodeID::STOP) && bb->getOffset() > lastOffset)
             lastOffset = bb->getOffset();
-    for(BasicBlock* bb: basicBlocks)
-        if(bb->getOffset() <= lastOffset)
-            bb->setType(BasicBlockType::DISPATCHER);
+        for(BasicBlock* bb: basicBlocks)
+            if(bb->getOffset() <= lastOffset)
+                bb->setType(BasicBlockType::DISPATCHER);
     }
 }
 
@@ -305,7 +309,7 @@ void CfgBuilder::detectFallBack(vector<BasicBlock*> &basicBlocks){
     long maxSuccessorOffset = 0;
     for(BasicBlock* successor : basicBlocks[0]->getSuccessors())
         maxSuccessorOffset = successor->getOffset() > maxSuccessorOffset ? successor->getOffset() : maxSuccessorOffset;
-    
+
     long maxSecondSuccessorOffset = maxSuccessorOffset;
     for(BasicBlock* secondSuccessor : getByOffset(basicBlocks, maxSuccessorOffset)->getSuccessors())
         maxSuccessorOffset = secondSuccessor->getOffset() > maxSuccessorOffset ? secondSuccessor->getOffset() : maxSuccessorOffset;
@@ -317,9 +321,9 @@ void CfgBuilder::detectFallBack(vector<BasicBlock*> &basicBlocks){
         for(BasicBlock* bb : fallbackCandidate->getSuccessors())
             if(bb->getLastOpcode()->getOpcodeID() != OpcodeID::REVERT)
                 bb->setType(BasicBlockType::FALLBACK);
-    } 
+    }
     else if(fallbackCandidate->getLastOpcode()->getOpcodeID() != OpcodeID::REVERT)
-        fallbackCandidate->setType(BasicBlockType::FALLBACK); 
+        fallbackCandidate->setType(BasicBlockType::FALLBACK);
 }
 
 void CfgBuilder::validateCfg(vector<BasicBlock*> &basicBlocks, CfgBuilderReport &buildReport){
@@ -350,7 +354,7 @@ Cfg* CfgBuilder::emptyCfg(){
 Cfg* CfgBuilder::buildCfg(string binary){
     if(binary == "")
         return emptyCfg();
-    
+
     CfgBuilderReport* buildReport = new CfgBuilderReport();
     // Remove child contracts
     string libraryPrefix = "";
@@ -358,10 +362,10 @@ Cfg* CfgBuilder::buildCfg(string binary){
         libraryPrefix = binary.substr(0, 46);
         binary = binary.substr(46);
     }
-    
+
     vector<string> mid = CfgBuilder::divide(binary, "(?=(60(60|80)604052))", 3);
     string childrenContracts = mid.size() > 2 ? mid[2] : "";
-    
+
     // Parse and get remaining data
     pair<Bytecode*, string> sourceParsed = BytecodeParser::parse(libraryPrefix + mid[1]);
     Bytecode* bytecode = sourceParsed.first;
@@ -378,7 +382,7 @@ Cfg* CfgBuilder::buildCfg(string binary){
     string removedData = removeRemainingData(basicBlocks, *buildReport, *bytecode);
     if(CfgBuilder::REMOVE_ORPHAN_BLOCKS)
         removedData = removeOrphanBlocks(basicBlocks, *buildReport, *bytecode);
-    
+
     detectDispatcher(basicBlocks);
     detectFallBack(basicBlocks);
     validateCfg(basicBlocks, *buildReport);
@@ -389,6 +393,5 @@ Cfg* CfgBuilder::buildCfg(string binary){
     string data = removedData + remainingData;
     Cfg *result = new Cfg(*bytecode, basicBlocks, data, *buildReport);
     return result;
-
 }
 
