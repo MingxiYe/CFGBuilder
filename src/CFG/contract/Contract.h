@@ -1,6 +1,7 @@
 #include <iostream>
 #include "../../SolidityInfo/SolidityVersion.h"
 #include "../cfgbuilder/CfgBuilder.h"
+#include "../Utils/Tools.h"
 #include <regex>
 
 using namespace std;
@@ -237,9 +238,15 @@ public:
         this->address = address;
         this->binarySource = binary;
         this->isOnlyRuntime = isOnlyRuntime;
+        // C++实现java hashCode()
         stringstream byte;
-        byte << hex << hash<string>()(binary);
-        this->contractHash = byte.str();
+        Tools tools;
+        int32_t hash = tools.hashCode(binary);
+        byte << hex << hash;
+        string hashCode;
+        byte >> hashCode;
+        this->contractHash = hashCode;
+//        cout<<"contractHash"<<this->contractHash<<endl;
         pair<string, string> strippedCode = removeCompilationInfo(binary);
         constructorRemainingData = strippedCode.second;
         string remainingCode = strippedCode.first;

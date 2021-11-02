@@ -118,3 +118,8 @@
 #include "../opcodes/opcode/SystemOpcode/StaticCallOpcode.h"
 #include "../opcodes/opcode/InvalidOpcode.h"
 #include "../opcodes/opcode/LogOpcode.h"
+
+class utils {
+
+
+};
