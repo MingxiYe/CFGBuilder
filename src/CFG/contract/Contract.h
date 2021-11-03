@@ -36,7 +36,8 @@ private:
             solidityVersion = SolidityVersion::FROM_0_4_17_TO_0_5_8;
             vector<string> splitString = CfgBuilder::divide(binary, "(?=a165627a7a72305820[0-9a-f]{64}0029)", 2);
             string second = splitString.size() > 1 ? splitString[1] : "";
-            metadata = binary.substr(splitString[0].size() - 86);
+//            metadata = binary.substr(splitString[0].size() - 86);
+            metadata = second;
             return make_pair(splitString[0], second.substr(86));
         }
             // Experimental option in Solidity due to ABIEncoderV2
@@ -49,7 +50,8 @@ private:
             solidityVersion = SolidityVersion::FROM_0_4_17_TO_0_5_8_EXPERIMENTAL;
             vector<string> splitString = CfgBuilder::divide(binary, "(?=a265627a7a72305820[0-9a-f]{64}6c6578706572696d656e74616cf50037)", 2);
             string second = splitString.size() > 1 ? splitString[1] : "";
-            metadata = binary.substr(splitString[0].size() - 114);
+//            metadata = binary.substr(splitString[0].size() - 114);
+            metadata = second;
             return make_pair(splitString[0], second.substr(114));
         }
             // From version solc-0.5.9
@@ -61,7 +63,8 @@ private:
             solidityVersion = SolidityVersion::FROM_0_5_9_TO_0_5_11;
             vector<string> splitString = CfgBuilder::divide(binary, "(?=a265627a7a72305820[0-9a-f]{64}64736f6c6343[0-9a-f]{6}0032)", 2);
             string second = splitString.size() > 1 ? splitString[1] : "";
-            metadata = binary.substr(splitString[0].size() - 104);
+//            metadata = binary.substr(splitString[0].size() - 104);
+            metadata = second;
             return make_pair(splitString[0], second.substr(104));
         }
             // Experimental option in Solidity due to ABIEncoderV2
@@ -75,7 +78,8 @@ private:
             solidityVersion = SolidityVersion::FROM_0_5_9_TO_0_5_11_EXPERIMENTAL;
             vector<string> splitString = CfgBuilder::divide(binary, "(?=a365627a7a72305820[0-9a-f]{64}6c6578706572696d656e74616cf564736f6c6343[0-9a-f]{6}0040)", 2);
             string second = splitString.size() > 1 ? splitString[1] : "";
-            metadata = binary.substr(splitString[0].size() - 132);
+//            metadata = binary.substr(splitString[0].size() - 132);
+            metadata = second;
             return make_pair(splitString[0], second.substr(132));
         }
             // From version solc-0.5.12
@@ -87,7 +91,8 @@ private:
             solidityVersion = SolidityVersion::FROM_0_5_12_TO_0_5_15;
             vector<string> splitString = CfgBuilder::divide(binary, "(?=a265627a7a72315820[0-9a-f]{64}64736f6c6343[0-9a-f]{6}0032)", 2);
             string second = splitString.size() > 1 ? splitString[1] : "";
-            metadata = binary.substr(splitString[0].size() - 104);
+//            metadata = binary.substr(splitString[0].size() - 104);
+            metadata = second;
             return make_pair(splitString[0], second.substr(104));
         }
             // Experimental option in Solidity due to ABIEncoderV2
@@ -101,7 +106,8 @@ private:
             solidityVersion = SolidityVersion::FROM_0_5_12_TO_0_5_15_EXPERIMENTAL;
             vector<string> splitString = CfgBuilder::divide(binary, "(?=a365627a7a72315820[0-9a-f]{64}6c6578706572696d656e74616cf564736f6c6343[0-9a-f]{6}0040)", 2);
             string second = splitString.size() > 1 ? splitString[1] : "";
-            metadata = binary.substr(splitString[0].size() - 132);
+//            metadata = binary.substr(splitString[0].size() - 132);
+            metadata = second;
             return make_pair(splitString[0], second.substr(132));
         }
             // From version solc-0.6.0
@@ -113,7 +119,8 @@ private:
             solidityVersion = SolidityVersion::FROM_0_6_0_TO_0_6_1;
             vector<string> splitString = CfgBuilder::divide(binary, "(?=a264697066735822[0-9a-f]{68}64736f6c6343[0-9a-f]{6}0032)", 2);
             string second = splitString.size() > 1 ? splitString[1] : "";
-            metadata = binary.substr(splitString[0].size() - 132);
+//            metadata = binary.substr(splitString[0].size() - 132);
+            metadata = second;
             return make_pair(splitString[0], second.substr(132));
         }
             // From version solc-0.6.2
@@ -254,9 +261,9 @@ public:
         if(!isOnlyRuntime){
             vector<string> splitCode = CfgBuilder::divide(remainingCode, "(?=(60(60|80)604052))", 3);
             runtime = splitCode[2];
-//                cout<<runtime<<endl;
+                cout<<"RuntimeCode: "<<runtime<<endl;
             constructor = splitCode[1];
-//                cout<<constructor<<endl;
+                cout<<"ConstructorCode: "<<constructor<<endl;
         } else {
             constructor = "";
             runtime = remainingCode;
