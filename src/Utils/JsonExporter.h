@@ -57,8 +57,9 @@ public:
         for (vector<BasicBlock*>::iterator m = i.begin(); m != i.end(); m++) {
             result["nodes"][count]["offset"] = (*m)->getOffset();
             result["nodes"][count]["length"] = (*m)->getLength();
-            result["nodes"][count]["type"] = (*m)->getType();
+            result["nodes"][count]["type"] = genStringByEnumInt((*m)->getType());
             result["nodes"][count]["stackBalance"] = (*m)->getStackBalance();
+            cout<<(*m)->getStackBalance()<<endl;
             result["nodes"][count]["bytecodeHex"] = (*m)->getBytes();
             result["nodes"][count]["parsedOpcodes"] = (*m)->toString();
             count++;
@@ -89,6 +90,16 @@ public:
             count++;
         }
         return res;
+    }
+
+    static string genStringByEnumInt(BasicBlockType type) {
+        switch(type) {
+            case BasicBlockType::COMMON : return "common";
+            case BasicBlockType::DISPATCHER : return "dispatcher";
+            case BasicBlockType::FALLBACK :  return "fallback";
+            case BasicBlockType::EXIT :  return "exit";
+            default: return "error";
+        }
     }
 
 

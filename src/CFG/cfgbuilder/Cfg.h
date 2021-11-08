@@ -7,7 +7,6 @@ using namespace std;
 class Cfg{
 private:
     vector<BasicBlock*> basicBlocks;
-//        vector<BasicBlock> basicBlocks;
     Bytecode bytecode;
     CfgBuilderReport buildReport;
     string remainingData;

@@ -129,7 +129,8 @@ public:
      * @return block's string representation
      */
     string toString() const{
-        if(type == EXIT)
+        // 3 denotes EXIT
+        if(type == 3)
             return getOffset() + ": EXIT BLOCK";
         else
             // 这里要继承父类的方法，相当于Java的super

@@ -28,9 +28,6 @@ vector<string> CfgBuilder::divide(const string& in, const string& delim, const i
             sregex_token_iterator(in.begin(), in.end(), re, -1),
             sregex_token_iterator()
     };
-//    cout<<result.size()<<endl;
-//    cout<<result[0]<<endl;
-//    cout<<result[1]<<endl;
     for(int i = share; i < result.size(); i++)
         result[share - 1] += result[i];
     while(result.size() > share)
