@@ -291,13 +291,16 @@ string CfgBuilder::removeOrphanBlocks(vector<BasicBlock*> &basicBlocks, CfgBuild
 
 void CfgBuilder::detectDispatcher(vector<BasicBlock*> &basicBlocks){
     long lastOffset = 0;
-    for(BasicBlock* bb : basicBlocks){
-        if( (bb->getLastOpcode()->getOpcodeID() == OpcodeID::RETURN || bb->getLastOpcode()->getOpcodeID() == OpcodeID::STOP) && bb->getOffset() > lastOffset)
+    for(BasicBlock* bb : basicBlocks) {
+        if ((bb->getLastOpcode()->getOpcodeID() == OpcodeID::RETURN ||
+            bb->getLastOpcode()->getOpcodeID() == OpcodeID::STOP) && bb->getOffset() > lastOffset)
             lastOffset = bb->getOffset();
-        for(BasicBlock* bb: basicBlocks)
-            if(bb->getOffset() <= lastOffset)
-                bb->setType(BasicBlockType::DISPATCHER);
     }
+    long finalLastBlockOffset = lastOffset;
+    for(BasicBlock* bb: basicBlocks)
+        if(bb->getOffset() <= finalLastBlockOffset)
+            bb->setType(BasicBlockType::DISPATCHER);
+
 }
 
 void CfgBuilder::detectFallBack(vector<BasicBlock*> &basicBlocks){

@@ -10,8 +10,8 @@ using namespace std;
 class Bytecode{
     protected:
         vector<Opcode*> opcodes;
-        long offset;
-        long length;
+        long offset = 0;
+        long length = 0;
     public:
         /**
          * Creates an empty bytecode with offset 0

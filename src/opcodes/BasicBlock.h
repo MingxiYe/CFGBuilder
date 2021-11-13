@@ -12,7 +12,7 @@ class BasicBlock : public Bytecode{
 private:
     vector<BasicBlock*> predecessors;
     vector<BasicBlock*> successors;
-    int stackBalance;
+    int stackBalance = 0;
     BasicBlockType type;
 
     bool isVulnerable = false;
@@ -28,13 +28,11 @@ private:
 
 public:
     BasicBlock(){
-        offset = 0;
-        length = 0;
+        new(this)BasicBlock( 0);
     }
 
     BasicBlock(long offset){
-        this->offset = offset;
-        length = 0;
+        new(this)BasicBlock(offset, *(new vector<Opcode*>()));
     }
 
     /**
@@ -43,6 +41,7 @@ public:
      * @param opcodes list of opcodes
      */
     BasicBlock(long offset, vector<Opcode*> &opcodes) : Bytecode(offset, opcodes){
+        Bytecode(offset, opcodes);
         this->type = BasicBlockType::COMMON;
     }
 
@@ -104,16 +103,6 @@ public:
      */
     void setType(BasicBlockType type){
         this->type = type;
-//            switch (type) {
-//                case 0:
-//                    this->type = BasicBlockType::COMMON;
-//                case 1:
-//                    this->type = BasicBlockType::DISPATCHER;
-//                case 2:
-//                    this->type = BasicBlockType::FALLBACK;
-//                case 3:
-//                    this->type = BasicBlockType::EXIT;
-//            }
     }
 
     /**
@@ -129,12 +118,12 @@ public:
      * @return block's string representation
      */
     string toString() const{
-        // 3 denotes EXIT
-        if(type == 3)
-            return getOffset() + ": EXIT BLOCK";
-        else
-            // 这里要继承父类的方法，相当于Java的super
+        if(type == BasicBlockType::EXIT) {
+            return to_string(getOffset()) + ": EXIT BLOCK";
+        }else{
             return Bytecode::toString();
+        }
+
     }
 
     void setTarget(){
