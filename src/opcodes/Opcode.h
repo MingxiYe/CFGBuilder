@@ -164,7 +164,7 @@ class Opcode{
          * @return "offset: opcode"
          */
         virtual string toString() const {
-            return to_string(offset) + ": " + getName();
+            return to_string(offset) + ": " + this->getName();
         }
 
         /**
@@ -176,14 +176,12 @@ class Opcode{
             return this->opcodeID == other->opcodeID;
         }
 
-        // void setOffset(long offset){
-        //     this->offset = offset;
-        // }
 
         // for PushOpcode.h
         virtual string getParameter() const{
             return string();
         }
+        
         virtual int getParameterLength() const{return -1;}
 
         // for LogOpcode.h
