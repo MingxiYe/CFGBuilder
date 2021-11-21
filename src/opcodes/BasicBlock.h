@@ -47,8 +47,6 @@ public:
      */
     BasicBlock(long offset, vector<Opcode*> &opcodes) : Bytecode(offset, opcodes){
         // Bytecode(offset, opcodes);
-        this->successor = new vector<BasicBlock*>;
-        this->predecessor = new vector<BasicBlock*>;
         this->type = BasicBlockType::COMMON;
     }
 
