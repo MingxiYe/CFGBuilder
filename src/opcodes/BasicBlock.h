@@ -15,8 +15,6 @@ private:
     int stackBalance = 0;
     BasicBlockType type;
 
-    bool isVulnerable = false;
-
     int calculateStackBalance() const{
         int balance = 0;
         for(Opcode* o : this->getOpcodes()){
@@ -27,10 +25,17 @@ private:
     }
 
 public:
+    /**
+     * Default constructor with offset 0 and no opcodes
+     */
     BasicBlock(){
         new(this)BasicBlock( 0);
     }
 
+    /**
+     * Default constructor with no opcodes
+     * @param offset position in the bytecode
+     */
     BasicBlock(long offset){
         new(this)BasicBlock(offset, *(new vector<Opcode*>()));
     }
@@ -41,7 +46,9 @@ public:
      * @param opcodes list of opcodes
      */
     BasicBlock(long offset, vector<Opcode*> &opcodes) : Bytecode(offset, opcodes){
-        Bytecode(offset, opcodes);
+        // Bytecode(offset, opcodes);
+        this->successor = new vector<BasicBlock*>;
+        this->predecessor = new vector<BasicBlock*>;
         this->type = BasicBlockType::COMMON;
     }
 
@@ -124,13 +131,5 @@ public:
             return Bytecode::toString();
         }
 
-    }
-
-    void setTarget(){
-        isVulnerable = true;
-    }
-
-    bool isTargeted(){
-        return isVulnerable;
     }
 };
