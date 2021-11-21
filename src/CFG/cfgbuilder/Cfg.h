@@ -20,9 +20,9 @@ public:
     }
 
     /**
-    * Default getter for the bytecode
-    * @return bytecode
-    */
+     * Default iterator over the basic blocks
+     * @return vector<BasicBlock*> basicBlocks
+     */
     vector<BasicBlock*> getBasicBlocksForIteration() {
         return basicBlocks;
     }
