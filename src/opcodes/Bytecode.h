@@ -17,8 +17,7 @@ class Bytecode{
          * Creates an empty bytecode with offset 0
          */
         Bytecode(){ 
-            offset = 0;
-            length = 0;
+            new(this)Bytecode(0);
         }
 
         /**
@@ -26,8 +25,7 @@ class Bytecode{
          * @param offset the offset of the bytecode, a.k.a. begin of the code
          */
         Bytecode(long offset){
-            this->offset = offset;
-            length = 0;
+            new(this)Bytecode(offset, *(new vector<Opcode*>()));
         }
 
         /**
@@ -48,8 +46,8 @@ class Bytecode{
          * @param opcode the opcode to add
          */
         void addOpcode(Opcode *opcode){
-            opcodes.push_back(opcode);
-            length += opcode->getLength();
+            this->opcodes.push_back(opcode);
+            this->length += opcode->getLength();
         }
 
         /**
@@ -83,6 +81,10 @@ class Bytecode{
                 addOpcode(tempOpcodes[i]);
         }
 
+        /**
+        * Default getter for the length
+        * @return length of the bytecode expressed in bytes
+        */
         long getLength() const {
             return length;
         }
@@ -91,6 +93,11 @@ class Bytecode{
             return opcodes[i];
         }
 
+        /**
+        * Compares two instances bytecode based on their offset
+        * @param other other bytecode to compare
+        * @return the comparison of the offset
+        */
         int comapreTo(const Bytecode &other) const {
             if(this->offset == other.offset)
                 return 0;
