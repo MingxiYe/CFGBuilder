@@ -195,6 +195,11 @@ class CfgBuilderReport{
             return stackExceededErrors;
         }
 
+        /**
+        * Gets the complete error log
+        * @return complete error log
+        * lack of CriticalError
+        */
         string getLog(){
             return errorLog;
         }
