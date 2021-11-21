@@ -61,8 +61,6 @@ vector<BasicBlock*> CfgBuilder::generateBasicBlocks(Bytecode &bytecode){
     vector<BasicBlock*> result;
     BasicBlock *current = new BasicBlock();
     for(Opcode* opcode : bytecode.getOpcodes()){
-        if(opcode->getOpcodeID() == OpcodeID::TIMESTAMP)
-            current->setTarget();
         if(isContainDelimiters(opcode->getOpcodeID())){
             current->addOpcode(opcode);
             result.push_back(current);
@@ -107,8 +105,7 @@ void CfgBuilder::calculateSuccessors(vector<BasicBlock*> &basicBlocks, CfgBuilde
                     buildReport.addDirectJumpError(lastOpcode->getOffset(), destinationOffset);
             }
         }
-
-            // JUMPI
+        // JUMPI
         else if(lastOpcode->getOpcodeID() == OpcodeID::JUMPI && opcodes.size() > 1){
             // Add the next one
             long nextOffset = lastOpcode->getOffset() + lastOpcode->getLength();
@@ -132,18 +129,15 @@ void CfgBuilder::calculateSuccessors(vector<BasicBlock*> &basicBlocks, CfgBuilde
                     buildReport.addDirectJumpError(lastOpcode->getOffset(), destinationOffset);
             }
         }
-
-            // Other delimiters
+        // Other delimiters
         else if(isContainDelimiters(lastOpcode->getOpcodeID())){
             // there is a control flow break, no successor added
         }
-
-            // Exclude the last block which has no sequent
+        // Exclude the last block which has no sequent
         else if(i == basicBlocks.size() - 1){
             // skip
         }
-
-            // Else
+        // Else
         else{
             // It's a common operation, add the next
             BasicBlock* nextBasicBlock = basicBlocks[i + 1];
@@ -174,7 +168,7 @@ void CfgBuilder::resolveOrphanJumps(vector<BasicBlock*> &basicBlocks, CfgBuilder
             Opcode* o = current->getOpcodes()[i];
             try{
                 stack.executeOpcode(o);
-            } catch(exception e){
+            } catch(const char* msg){
                 buildReport.addStackExceededError(o->getOffset());
             }
         }
@@ -191,7 +185,7 @@ void CfgBuilder::resolveOrphanJumps(vector<BasicBlock*> &basicBlocks, CfgBuilder
                     current->addSuccessor(nextBB);
                 else
                     buildReport.addOrphanJumpTargetNullError(lastOpcode->getOffset(), nextOffset);
-            } catch(exception e){
+            } catch(const char* msg){
                 buildReport.addOrphanJumpTargetUnknownError(lastOpcode->getOffset(), stack);
             }
         }
@@ -204,7 +198,7 @@ void CfgBuilder::resolveOrphanJumps(vector<BasicBlock*> &basicBlocks, CfgBuilder
         }
         try{
             stack.executeOpcode(current->getOpcodes()[current->getOpcodes().size() - 1]);
-        } catch(exception e){
+        } catch(const char* msg){
             buildReport.addStackExceededError(lastOpcode->getOffset());
         }
 
@@ -346,9 +340,7 @@ void CfgBuilder::addSuperNode(vector<BasicBlock*> &basicBlocks){
 }
 
 Cfg* CfgBuilder::emptyCfg(){
-    string data = "";
-    Cfg *result = new Cfg(*(new Bytecode()), *(new vector<BasicBlock*>()), data, *(new CfgBuilderReport()));
-    return result;
+    return new Cfg(*(new Bytecode()), *(new vector<BasicBlock*>()), "", *(new CfgBuilderReport()));
 }
 
 Cfg* CfgBuilder::buildCfg(string binary){
@@ -376,7 +368,7 @@ Cfg* CfgBuilder::buildCfg(string binary){
     calculateSuccessors(basicBlocks, *buildReport);
     try{
         resolveOrphanJumps(basicBlocks, *buildReport);
-    } catch (exception e){
+    } catch (const char* msg){
         buildReport->addCriticalError();
     }
     string removedData = removeRemainingData(basicBlocks, *buildReport, *bytecode);
@@ -390,8 +382,6 @@ Cfg* CfgBuilder::buildCfg(string binary){
 
     // CREATE ADN RETURN THE CFG
     buildReport->stopTimer();
-    string data = removedData + remainingData;
-    Cfg *result = new Cfg(*bytecode, basicBlocks, data, *buildReport);
-    return result;
+    return new Cfg(*bytecode, basicBlocks, removedData + remainingData, *buildReport);
 }
 

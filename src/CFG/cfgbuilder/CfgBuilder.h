@@ -19,6 +19,13 @@ struct Edge
     }
 };
 
+struct QueueItem
+{
+    BasicBlock* basicBlock;
+    SymbolicExecutionStack stack;
+    int dfsDepth;
+};
+
 class CfgBuilder{
     private:
         /**
@@ -82,11 +89,4 @@ class CfgBuilder{
         static Cfg* buildCfg(string binary);
 
         static vector<string> divide(const string& in, const string& delim, const int share);
-};
-
-struct QueueItem
-{
-    BasicBlock* basicBlock;
-    SymbolicExecutionStack stack;
-    int dfsDepth;
 };
