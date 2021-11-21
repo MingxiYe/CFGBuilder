@@ -340,7 +340,8 @@ void CfgBuilder::addSuperNode(vector<BasicBlock*> &basicBlocks){
 }
 
 Cfg* CfgBuilder::emptyCfg(){
-    return new Cfg(*(new Bytecode()), *(new vector<BasicBlock*>()), "", *(new CfgBuilderReport()));
+    string data = "";
+    return new Cfg(*(new Bytecode()), *(new vector<BasicBlock*>()), data, *(new CfgBuilderReport()));
 }
 
 Cfg* CfgBuilder::buildCfg(string binary){
@@ -382,6 +383,7 @@ Cfg* CfgBuilder::buildCfg(string binary){
 
     // CREATE ADN RETURN THE CFG
     buildReport->stopTimer();
-    return new Cfg(*bytecode, basicBlocks, removedData + remainingData, *buildReport);
+    string data = removedData + remainingData;
+    return new Cfg(*bytecode, basicBlocks, data, *buildReport);
 }
 
