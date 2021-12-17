@@ -261,9 +261,7 @@ public:
         if(!isOnlyRuntime){
             vector<string> splitCode = CfgBuilder::divide(remainingCode, "(?=(60(60|80)604052))", 3);
             runtime = splitCode[2];
-                cout<<"RuntimeCode: "<<runtime<<endl;
             constructor = splitCode[1];
-                cout<<"ConstructorCode: "<<constructor<<endl;
         } else {
             constructor = "";
             runtime = remainingCode;

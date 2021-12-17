@@ -59,7 +59,6 @@ public:
             result["nodes"][count]["length"] = (*m)->getLength();
             result["nodes"][count]["type"] = genStringByEnumInt((*m)->getType());
             result["nodes"][count]["stackBalance"] = (*m)->getStackBalance();
-            cout<<(*m)->getStackBalance()<<endl;
             result["nodes"][count]["bytecodeHex"] = (*m)->getBytes();
             result["nodes"][count]["parsedOpcodes"] = (*m)->toString();
             count++;
