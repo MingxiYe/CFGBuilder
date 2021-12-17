@@ -55,11 +55,11 @@ string parseJson(string jsonFile, string contractName) {
     exit(0);
   }
 //   pt::ptree::path_type abiPath("contracts|"+ fullContractName +"|abi", '|');
-//   pt::ptree::path_type binPath("contracts|"+ fullContractName +"|bin", '|');
-  pt::ptree::path_type binRuntimePath("contracts|" + fullContractName + "|bin-runtime", '|');
+  pt::ptree::path_type binPath("contracts|"+ fullContractName +"|bin", '|');
+//   pt::ptree::path_type binRuntimePath("contracts|" + fullContractName + "|bin-runtime", '|');
 //   pt::ptree::path_type srcmapPath("contracts|" + fullContractName + "|srcmap", '|');
 //   pt::ptree::path_type srcmapRuntimePath("contracts|" + fullContractName + "|srcmap-runtime", '|');
-  return root.get<string>(binRuntimePath);
+  return root.get<string>(binPath);
 }
 
 string Message::ANSI_RESET = "\u001B[0m";
@@ -106,7 +106,7 @@ int main(int argc, char* argv[]){
         forEachFile(contractsFolder, ".sol", [&](directory_entry file) {
             string filePath = file.path().string();
             string fileName = file.path().filename().string();
-            string thisContractName = fileName.substr(41, fileName.length() - 41);
+            string thisContractName = fileName.substr(41, fileName.length() - 45);
             cfgCon << "./main";
             cfgCon << " --file " + filePath + ".json";
             cfgCon << " --name " + thisContractName;
@@ -116,28 +116,28 @@ int main(int argc, char* argv[]){
     }
     /* Construct CFG of a single json file*/
     if(vm.count("file") && vm.count("name")){
-        // string bytecode = parseJson(jsonFile, contractName);
-        // Contract contract(contractName, bytecode);
-        // my_json output;
-        // try {
-        //     output = JsonExporter::contractJsonWriter(contract);
-        //     std::fstream _file;
-        //     _file.open("../../outputs/json/" + contractName + ".json", ios::in);
-        //     if(!_file) {
-        //         Message::printDebugFun("Output file will be created");
-        //         try {
-        //             std::ofstream ofs;
-        //             ofs.open("../../outputs/json/" + contractName + ".json", ios::out);
-        //             ofs << output.dump(4) << endl;
-        //             ofs.close();
-        //             cout << "Contract analysis exported in " << contractName + ".json" << endl;
-        //         } catch (exception e) {
-        //             cerr << "Error writing file" + contractName + ": " + e.what();
-        //         }
-        //     }
-        // } catch (exception e) {
-        //     cerr << "error occurred: " << e.what() << endl;
-        // }
+        string bytecode = parseJson(jsonFile, contractName);
+        Contract contract(contractName, bytecode);
+        my_json output;
+        try {
+            output = JsonExporter::contractJsonWriter(contract);
+            std::fstream _file;
+            _file.open("../../outputs/json/" + contractName + ".json", ios::in);
+            if(!_file) {
+                Message::printDebugFun("Output file will be created");
+                try {
+                    std::ofstream ofs;
+                    ofs.open("../../outputs/json/" + contractName + ".json", ios::out);
+                    ofs << output.dump(4) << endl;
+                    ofs.close();
+                    cout << "Contract analysis exported in " << contractName + ".json" << endl;
+                } catch (exception e) {
+                    cerr << "Error writing file" + contractName + ": " + e.what();
+                }
+            }
+        } catch (exception e) {
+            cerr << "error occurred: " << e.what() << endl;
+        }
     }
 
     return 0;
