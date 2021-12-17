@@ -57,6 +57,7 @@ int main(int argc, char* argv[]){
             cfgCon << " --name " + thisContractName;
             cfgCon << endl;
         });
+        cfgCon.close();
     }
     /* Construct CFG of a single json file*/
     if(vm.count("file") && vm.count("name")){
