@@ -14,4 +14,4 @@ include_directories(SolidityInfo)
 
 include_directories(Utils)
 
-add_executable(main main.cpp CFG/cfgbuilder/CfgBuilder.cpp CFG/SymbolicExecution/SymbolicExecutionStack.cpp Utils/Tools.h Utils/fifo_map.hpp)
+add_executable(main main.cpp CFG/cfgbuilder/CfgBuilder.cpp CFG/SymbolicExecution/SymbolicExecutionStack.cpp Utils/Tools.h Utils/fifo_map.hpp Utils.h)
