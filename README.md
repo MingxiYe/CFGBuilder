@@ -6,7 +6,7 @@ Git and GitHub are used to maintain the source code. Clone the repository by:
 
 ```shell
 git clone https://github.com/MingxiYe/CFGBuilder.git
-cd CFGBuilder
+cd CFGBuilder/src
 ```
 
 ### Install CMake
