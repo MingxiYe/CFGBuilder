@@ -40,3 +40,4 @@ Place contracts to `contracts/`
 ```shell
 ./main -g && chmod +x cfgCon && ./cfgCon
 ```
+The CFG will be stored in `outpus/` in the form of json
