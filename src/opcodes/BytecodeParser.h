@@ -86,7 +86,7 @@ class BytecodeParser{
                 case 0x20:
                     return new SHA3Opcode(offset);
                 case 0x30:
-                    return new BalanceOpcode(offset);
+                    return new AddressOpcode(offset);
                 case 0x31:
                     return new BalanceOpcode(offset);
                 case 0x32:
