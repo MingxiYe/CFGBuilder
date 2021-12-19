@@ -23,7 +23,7 @@ OpcodeID CfgBuilder::BASIC_BLOCK_DELIMITERS[7] = {
 };
 
 vector<string> CfgBuilder::divide(const string& in, const string& delim, const int share) {
-    regex re{ delim };
+    boost::regex re{ delim };
     vector<string> result = {
             boost::sregex_token_iterator(in.begin(), in.end(), re, -1),
             boost::sregex_token_iterator()
@@ -351,7 +351,7 @@ Cfg* CfgBuilder::buildCfg(string binary){
     CfgBuilderReport* buildReport = new CfgBuilderReport();
     // Remove child contracts
     string libraryPrefix = "";
-    if(boost::regex_match(binary,regex("^73[0-9a-fA-F]{40}3014[0-9a-fA-F]*$"))){
+    if(boost::regex_match(binary,boost::regex("^73[0-9a-fA-F]{40}3014[0-9a-fA-F]*$"))){
         libraryPrefix = binary.substr(0, 46);
         binary = binary.substr(46);
     }
