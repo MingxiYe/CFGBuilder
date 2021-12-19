@@ -351,7 +351,7 @@ Cfg* CfgBuilder::buildCfg(string binary){
     CfgBuilderReport* buildReport = new CfgBuilderReport();
     // Remove child contracts
     string libraryPrefix = "";
-    if(boost::regex_matches(binary,regex("^73[0-9a-fA-F]{40}3014[0-9a-fA-F]*$"))){
+    if(boost::regex_match(binary,regex("^73[0-9a-fA-F]{40}3014[0-9a-fA-F]*$"))){
         libraryPrefix = binary.substr(0, 46);
         binary = binary.substr(46);
     }
