@@ -3,7 +3,7 @@
 #include "CfgBuilder.h"
 
 #include <algorithm>
-#include <regex>
+#include <boost/regex.hpp>
 
 using namespace std;
 
@@ -25,8 +25,8 @@ OpcodeID CfgBuilder::BASIC_BLOCK_DELIMITERS[7] = {
 vector<string> CfgBuilder::divide(const string& in, const string& delim, const int share) {
     regex re{ delim };
     vector<string> result = {
-            sregex_token_iterator(in.begin(), in.end(), re, -1),
-            sregex_token_iterator()
+            boost::sregex_token_iterator(in.begin(), in.end(), re, -1),
+            boost::sregex_token_iterator()
     };
     for(int i = share; i < result.size(); i++)
         result[share - 1] += result[i];
@@ -351,7 +351,7 @@ Cfg* CfgBuilder::buildCfg(string binary){
     CfgBuilderReport* buildReport = new CfgBuilderReport();
     // Remove child contracts
     string libraryPrefix = "";
-    if(regex_search(binary,regex("^73[0-9a-fA-F]{40}3014[0-9a-fA-F]*$"))){
+    if(boost::regex_matches(binary,regex("^73[0-9a-fA-F]{40}3014[0-9a-fA-F]*$"))){
         libraryPrefix = binary.substr(0, 46);
         binary = binary.substr(46);
     }

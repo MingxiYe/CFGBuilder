@@ -1,8 +1,8 @@
 #include <iostream>
 #include "../../SolidityInfo/SolidityVersion.h"
 #include "../cfgbuilder/CfgBuilder.h"
-#include "../Utils/Tools.h"
-#include <regex>
+#include "../../Utils/Tools.h"
+#include <boost/regex.hpp>
 
 using namespace std;
 
@@ -32,7 +32,7 @@ private:
         // 0xa1
         // 0x65 'b' 'z' 'z' 'r' '0' 0x58 0x20 <32 bytes swarm hash>
         // 0x00 0x29
-        if(regex_search(binary, regex("^[0-9a-f]*a165627a7a72305820[0-9a-f]{64}0029[0-9a-f]*$"))){
+        if(boost::regex_matches(binary, boost::regex("^[0-9a-f]*a165627a7a72305820[0-9a-f]{64}0029[0-9a-f]*$"))){
             solidityVersion = SolidityVersion::FROM_0_4_17_TO_0_5_8;
             vector<string> splitString = CfgBuilder::divide(binary, "(?=a165627a7a72305820[0-9a-f]{64}0029)", 2);
             string second = splitString.size() > 1 ? splitString[1] : "";
@@ -46,7 +46,7 @@ private:
             // 0x65 'b' 'z' 'z' 'r' '0' 0x58 0x20 <32 bytes swarm hash>
             // 0x6c 'e' 'x' 'p' 'e' 'r' 'i' 'm' 'e' 'n' 't' 'a' 'l' 0xf5
             // 0x00 0x37
-        else if(regex_search(binary, regex("^[0-9a-f]*a265627a7a72305820[0-9a-f]{64}6c6578706572696d656e74616cf50037[0-9a-f]*$"))){
+        else if(boost::regex_matches(binary, boost::regex("^[0-9a-f]*a265627a7a72305820[0-9a-f]{64}6c6578706572696d656e74616cf50037[0-9a-f]*$"))){
             solidityVersion = SolidityVersion::FROM_0_4_17_TO_0_5_8_EXPERIMENTAL;
             vector<string> splitString = CfgBuilder::divide(binary, "(?=a265627a7a72305820[0-9a-f]{64}6c6578706572696d656e74616cf50037)", 2);
             string second = splitString.size() > 1 ? splitString[1] : "";
@@ -59,7 +59,7 @@ private:
             // 0x65 'b' 'z' 'z' 'r' '0' 0x58 0x20 <32 bytes swarm hash>
             // 0x64 's' 'o' 'l' 'c' 0x43 <3 byte version encoding>
             // 0x00 0x32
-        else if(regex_search(binary, regex("^[0-9a-f]*a265627a7a72305820[0-9a-f]{64}64736f6c6343[0-9a-f]{6}0032[0-9a-f]*$"))){
+        else if(boost::regex_matches(binary, boost::regex("^[0-9a-f]*a265627a7a72305820[0-9a-f]{64}64736f6c6343[0-9a-f]{6}0032[0-9a-f]*$"))){
             solidityVersion = SolidityVersion::FROM_0_5_9_TO_0_5_11;
             vector<string> splitString = CfgBuilder::divide(binary, "(?=a265627a7a72305820[0-9a-f]{64}64736f6c6343[0-9a-f]{6}0032)", 2);
             string second = splitString.size() > 1 ? splitString[1] : "";
@@ -74,7 +74,7 @@ private:
             // 0x6c 'e' 'x' 'p' 'e' 'r' 'i' 'm' 'e' 'n' 't' 'a' 'l' 0xf5
             // 0x64 's' 'o' 'l' 'c' 0x43 <3 byte version encoding>
             // 0x00 0x40
-        else if(regex_search(binary, regex("^[0-9a-f]*a365627a7a72305820[0-9a-f]{64}6c6578706572696d656e74616cf564736f6c6343[0-9a-f]{6}0040[0-9a-f]*$"))){
+        else if(boost::regex_matches(binary, boost::regex("^[0-9a-f]*a365627a7a72305820[0-9a-f]{64}6c6578706572696d656e74616cf564736f6c6343[0-9a-f]{6}0040[0-9a-f]*$"))){
             solidityVersion = SolidityVersion::FROM_0_5_9_TO_0_5_11_EXPERIMENTAL;
             vector<string> splitString = CfgBuilder::divide(binary, "(?=a365627a7a72305820[0-9a-f]{64}6c6578706572696d656e74616cf564736f6c6343[0-9a-f]{6}0040)", 2);
             string second = splitString.size() > 1 ? splitString[1] : "";
@@ -87,7 +87,7 @@ private:
             // 0x65 'b' 'z' 'z' 'r' '1' 0x58 0x20 <32 bytes swarm hash>
             // 0x64 's' 'o' 'l' 'c' 0x43 <3 byte version encoding>
             // 0x00 0x32
-        else if(regex_search(binary, regex("^[0-9a-f]*a265627a7a72315820[0-9a-f]{64}64736f6c6343[0-9a-f]{6}0032[0-9a-f]*$"))){
+        else if(boost::regex_matches(binary, boost::regex("^[0-9a-f]*a265627a7a72315820[0-9a-f]{64}64736f6c6343[0-9a-f]{6}0032[0-9a-f]*$"))){
             solidityVersion = SolidityVersion::FROM_0_5_12_TO_0_5_15;
             vector<string> splitString = CfgBuilder::divide(binary, "(?=a265627a7a72315820[0-9a-f]{64}64736f6c6343[0-9a-f]{6}0032)", 2);
             string second = splitString.size() > 1 ? splitString[1] : "";
@@ -102,7 +102,7 @@ private:
             // 0x6c 'e' 'x' 'p' 'e' 'r' 'i' 'm' 'e' 'n' 't' 'a' 'l' 0xf5
             // 0x64 's' 'o' 'l' 'c' 0x43 <3 byte version encoding>
             // 0x00 0x40
-        else if(regex_search(binary, regex("^[0-9a-f]*a365627a7a72315820[0-9a-f]{64}6c6578706572696d656e74616cf564736f6c6343[0-9a-f]{6}0040[0-9a-f]*$"))){
+        else if(boost::regex_matches(binary, boost::regex("^[0-9a-f]*a365627a7a72315820[0-9a-f]{64}6c6578706572696d656e74616cf564736f6c6343[0-9a-f]{6}0040[0-9a-f]*$"))){
             solidityVersion = SolidityVersion::FROM_0_5_12_TO_0_5_15_EXPERIMENTAL;
             vector<string> splitString = CfgBuilder::divide(binary, "(?=a365627a7a72315820[0-9a-f]{64}6c6578706572696d656e74616cf564736f6c6343[0-9a-f]{6}0040)", 2);
             string second = splitString.size() > 1 ? splitString[1] : "";
@@ -115,7 +115,7 @@ private:
             // 0x64 'i' 'p' 'f' 's' 0x58 0x22 <34 bytes IPFS hash>
             // 0x64 's' 'o' 'l' 'c' 0x43 <3 byte version encoding>
             // 0x00 0x32
-        else if(regex_search(binary, regex("^[0-9a-f]*a264697066735822[0-9a-f]{68}64736f6c6343[0-9a-f]{6}0032[0-9a-f]*$"))){
+        else if(boost::regex_matches(binary, boost::regex("^[0-9a-f]*a264697066735822[0-9a-f]{68}64736f6c6343[0-9a-f]{6}0032[0-9a-f]*$"))){
             solidityVersion = SolidityVersion::FROM_0_6_0_TO_0_6_1;
             vector<string> splitString = CfgBuilder::divide(binary, "(?=a264697066735822[0-9a-f]{68}64736f6c6343[0-9a-f]{6}0032)", 2);
             string second = splitString.size() > 1 ? splitString[1] : "";
@@ -128,7 +128,7 @@ private:
             // 0x64 'i' 'p' 'f' 's' 0x58 0x22 <34 bytes IPFS hash>
             // 0x64 's' 'o' 'l' 'c' 0x43 <3 byte version encoding>
             // 0x00 0x33
-        else if(regex_search(binary, regex("^[0-9a-f]*a264697066735822[0-9a-f]{68}64736f6c6343[0-9a-f]{6}0033[0-9a-f]*$"))){
+        else if(boost::regex_matches(binary, boost::regex("^[0-9a-f]*a264697066735822[0-9a-f]{68}64736f6c6343[0-9a-f]{6}0033[0-9a-f]*$"))){
             solidityVersion = SolidityVersion::FROM_0_6_2_TO_LATEST;
             vector<string> splitString = CfgBuilder::divide(binary, "(?=a264697066735822[0-9a-f]{68}64736f6c6343[0-9a-f]{6}0033)", 2);
 //                cout<<splitString[0]<<endl;
@@ -239,7 +239,7 @@ public:
      */
     Contract(string name, string binary, bool isOnlyRuntime = false, string address = ""){
         // the first part is for the libraries
-        if(!regex_search(binary, regex("^(73[0-9a-fA-F]{40}3014)?60(60|80)604052[0-9a-fA-F]*$")))
+        if(!boost::regex_matches(binary, boost::regex("^(73[0-9a-fA-F]{40}3014)?60(60|80)604052[0-9a-fA-F]*$")))
             throw "NotSolidityContractException";
         this->name = name;
         this->address = address;
