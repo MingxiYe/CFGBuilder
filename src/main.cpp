@@ -45,7 +45,7 @@ string parseJson(string jsonFile, string contractName) {
   pt::read_json(jsonFile, root);
   string fullContractName = "";
   for (auto key : root.get_child("contracts")) {
-    if (boost::ends_with(key.first, contractName)) {
+    if (boost::ends_with(key.first, ":" + contractName)) {
       fullContractName = key.first;
       break;
     }
