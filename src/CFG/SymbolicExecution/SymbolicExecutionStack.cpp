@@ -109,18 +109,10 @@ string SymbolicExecutionStack::peek(){
 bool SymbolicExecutionStack::operator ==(const SymbolicExecutionStack &other){
     if(this == &other) return true;
     if(this->stack.size() != other.stack.size()) return false;
-    int stackTailSize = this->stack.size() >= SymbolicExecutionStack::STACK_TAIL_THRESHOLD + 100 ? SymbolicExecutionStack::STACK_TAIL_SIZE / ((this->stack.size() - SymbolicExecutionStack::STACK_TAIL_THRESHOLD) / 100) : SymbolicExecutionStack::STACK_TAIL_SIZE;
-    if(this->stack.size() < stackTailSize && other.stack.size() < stackTailSize){
-        for(int i = 0; i < this->stack.size(); i ++)
-            if(this->stack[i] != other.stack[i])
-                return false;
-        return true;
-    } else {
-        for(int i = this->stack.size() - 1; i >= this->stack.size() - stackTailSize; i--)
-            if(this->stack[i] != other.stack[i])
-                return false;
-        return true;
-    }
+    for(int i = 0; i < this->stack.size(); i++)
+        if(this->stack[i] != other.stack[i])
+            return false;
+    return true;
 }
 
 string SymbolicExecutionStack::pop(){
