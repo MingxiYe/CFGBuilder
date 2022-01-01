@@ -239,6 +239,7 @@ public:
      */
     Contract(string name, string binary, bool isOnlyRuntime = false, string address = ""){
         // the first part is for the libraries
+        binary = boost::regex_replace(binary, boost::regex("__.*CFGBuilder/contracts/.*__"), "00000000000000000000");
         if(!boost::regex_match(binary, boost::regex("^(73[0-9a-fA-F]{40}3014)?60(60|80)604052[0-9a-fA-F]*$")))
             throw "NotSolidityContractException";
         this->name = name;
